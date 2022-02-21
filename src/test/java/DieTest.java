@@ -20,4 +20,11 @@ public class DieTest {
         int testValue = die.roll();
         assertEquals(testValue, die.value);
     }
+
+    @Test
+    void rollDieProbabilitiesTest(){
+        die = new Die(6,new int[]{1,1,1,1,1,2});
+        int testValue = die.roll();
+        assertEquals(testValue, die.value);
+    }
 }

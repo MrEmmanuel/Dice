@@ -1,18 +1,23 @@
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class DieTest {
 
-    Die mockDie;
+    Die die;
 
-    @BeforeEach
-    public void setup(){
-        mockDie = mock(Die.class);
+    @Test
+    void rollDie6Test(){
+        die = new Die(6);
+        int testValue = die.roll();
+        assertEquals(testValue, die.value);
     }
 
     @Test
-    void rollTest(){
-        doNothing().when()
+    void rollDie20Test(){
+        die = new Die(20);
+        int testValue = die.roll();
+        assertEquals(testValue, die.value);
     }
 }

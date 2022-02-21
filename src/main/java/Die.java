@@ -7,8 +7,8 @@ public class Die {
     }
 
 
-    public void roll(){
+    public int roll(){
         value = (int)(Math.random()*sides)+1;
-        System.out.println(value);
+        return value;
     }
 }

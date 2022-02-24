@@ -8,43 +8,46 @@ public class Die {
 
     Die(int sides) {
         this.sides = sides;
-        for (int i = 1; i < sides + 1; ++i) {
+        for (int i = 1; i <= sides; i++) {
             values.add(i);
         }
     }
-    public Die(int sides, int... array){
+    public Die(int sides, int... probabilities){
         this.sides = sides;
         int sum = 0;
-        for (int x : array) {
+        if(sides != probabilities.length){
+           throw new IllegalArgumentException("the number of sides doesn't match the length of the array of probabilities.");
+        }
+        for (int x : probabilities) {
             if (x != (int)x) {
                 throw new IllegalArgumentException("only integer values allowed");
             }
-            sum += x;
-            if (x < 0) {
+            if (x <= -1) {
                 throw new IllegalArgumentException("negative probabilities not allowed");
             }
+            sum += x;
         }
+
         if (sum < 1){
-            throw new ArithmeticException("probability sum must be greater than 0");
+            throw new IllegalArgumentException("probability sum must be greater than 0");
         }
-        setProbabilities(sides, array);
+        setProbabilities(sides, probabilities);
 
     }
 
-    private void setProbabilities(int sides, int[] array) {
-        for (int i = 1; i <= sides; ++i) {
-            if (i <= array.length && array[i - 1] > 1) {
-                for (int j = 0; j < array[i - 1]; ++j) {
+    private void setProbabilities(int sides, int[] probabilities) {
+        for (int i = 1; i <= sides; i++) {
+            if (i <= probabilities.length && probabilities[i - 1] > 1) {
+                for (int j = 0; j < probabilities[i - 1]; j++) {
                     values.add(i);
                 }
-                sides = sides + (array[i - 1] - 1);
-            } else if (i <= array.length) {
+                sides = sides + (probabilities[i - 1] - 1);
+            } else if (i <= probabilities.length) {
                 values.add(i);
             }
         }
         this.sides = sides;
     }
-
 
     public int roll(){
         int bound = sides - 1;

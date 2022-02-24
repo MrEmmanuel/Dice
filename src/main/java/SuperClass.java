@@ -1,3 +1,3 @@
 public interface SuperClass {
-    void makeDie();
+    public Die makeDie(int sides);
 }

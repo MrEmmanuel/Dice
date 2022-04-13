@@ -19,37 +19,41 @@ public class DieTest {
     }
 
     @Test
-    void rollDieTest(){
-        die6 = new Die(6);
-        die20 = new Die(20);
-        assertAll(
-                () -> assertEquals(die6.roll(),die6.value),
-                () -> assertEquals(die20.roll(),die20.value)
-        );
-    }
-
-    @Test
-    void numberOfSidesAndLengthOfArrayTest() {
+    void numberOfSidesTest() {
         IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            die6 = new Die(7,new int[]{1,-1,1,1,1,2});
-        }, "the number of sides doesn't match the length of the array of probabilities.");
-        Assertions.assertEquals("the number of sides doesn't match the length of the array of probabilities.", thrown.getMessage());
+            Die die1 = new Die(1);
+            die1.roll();
+        }, "sides has to be an integer that is greater than one");
+        Assertions.assertEquals("sides has to be an integer that is greater than one", thrown.getMessage());
 
     }
 
     @Test
-    void probabilitiesHasNegetiveNumbertest() {
+    void sumOfProbabilitiesTest() {
+        IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            die6 = new Die(6,new int[]{0,0,0,0,0,0});
+            die6.roll();
+        }, "probability sum must be greater than 0");
+        Assertions.assertEquals("probability sum must be greater than 0", thrown.getMessage());
+
+    }
+
+
+    @Test
+    void probabilitiesHasNegetiveNumberTest() {
         IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class, () -> {
            die6 = new Die(6,new int[]{-1,-1,1,1,1,2});
+           die6.roll();
         }, "negative probabilities not allowed");
         Assertions.assertEquals("negative probabilities not allowed", thrown.getMessage());
 
     }
-    
+
     @Test
-    void rollDieProbabilitiesTest(){
-        die6 = new Die(6,new int[]{1,0,0,0,0,0});
-        int testValue = die6.roll();
-        assertEquals(testValue, die6.value);
+    void rollDieProbabilitiesTest() throws Exception {
+
+        die6 = new Die(6,new int[]{0,0,0,1,0,0});
+        die6.roll();
+        assertEquals(4, die6.value);
     }
 }

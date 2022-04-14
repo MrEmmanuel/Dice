@@ -1,59 +1,60 @@
 import java.util.ArrayList;
-import java.util.Random;
-
 public class Die {
     int sides;
     int value;
-    ArrayList<Integer> values = new ArrayList<>();
+    int[] probabilities;
 
-    Die(int sides) {
-        this.sides = sides;
-        for (int i = 1; i <= sides; i++) {
-            values.add(i);
-        }
+    Die(int dieSides, int... dieProbabilities){
+        this.sides=dieSides;
+        this.probabilities=dieProbabilities;
     }
-    public Die(int sides, int... probabilities){
-        this.sides = sides;
-        int sum = 0;
-        if(sides != probabilities.length){
-           throw new IllegalArgumentException("the number of sides doesn't match the length of the array of probabilities.");
-        }
-        for (int x : probabilities) {
-            if (x != (int)x) {
-                throw new IllegalArgumentException("only integer values allowed");
-            }
-            if (x <= -1) {
-                throw new IllegalArgumentException("negative probabilities not allowed");
-            }
-            sum += x;
+    public void roll() throws Exception{
+        if(sides<=1){
+            throw new IllegalArgumentException("sides has to be an integer that is greater than one");
         }
 
-        if (sum < 1){
-            throw new IllegalArgumentException("probability sum must be greater than 0");
-        }
-        setProbabilities(sides, probabilities);
-
-    }
-
-    private void setProbabilities(int sides, int[] probabilities) {
-        for (int i = 1; i <= sides; i++) {
-            if (i <= probabilities.length && probabilities[i - 1] > 1) {
-                for (int j = 0; j < probabilities[i - 1]; j++) {
-                    values.add(i);
+        if(sides==probabilities.length) {
+            int probabilitySum = 0;
+            for (int number : probabilities) {
+                if(number == 0){continue;}
+                if(number == (int)number) {
+                    probabilitySum += number;
+                }else {
+                    throw new IllegalArgumentException("only integer values allowed");
                 }
-                sides = sides + (probabilities[i - 1] - 1);
-            } else if (i <= probabilities.length) {
-                values.add(i);
             }
+            if(probabilitySum<=0) {
+                throw new IllegalArgumentException("probability sum must be greater than 0");
+            }
+            ArrayList<Double> probabilitiesInFraction = new ArrayList<>();
+            for (int index = 0; index < probabilities.length; index++){
+                int currentValue = probabilities[index];
+                if(currentValue<0){
+                    throw new IllegalArgumentException("negative probabilities not allowed");
+                }
+                if(index>0){
+                    probabilitiesInFraction.add(((double)currentValue)/probabilitySum+probabilitiesInFraction.get(index-1));
+                }else {
+                    probabilitiesInFraction.add(((double)currentValue)/probabilitySum);
+                }
+            }
+            double random = Math.random();
+            ArrayList<Integer> values = new ArrayList<>();
+            for(int a=1;a<=sides;a++){
+                values.add(a);
+            }
+            for(int a =0;a<probabilitiesInFraction.size();a++){
+                if(random<probabilitiesInFraction.get(a)){
+                    value = values.get(a);
+                    break;
+                }
+            }
+        }else {
+            value = (int) (Math.random()*sides+1);
         }
-        this.sides = sides;
     }
-
-    public int roll(){
-        int bound = sides - 1;
-        Random random = new Random();
-        int randomIndex = random.nextInt(bound);
-        value = values.get(randomIndex);
-        return value;
+    public int[] setProbabilities(int... newProbability){
+        probabilities = newProbability;
+        return newProbability;
     }
 }

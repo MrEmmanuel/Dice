@@ -1,3 +1,3 @@
-public interface SuperClass {
+interface SuperDiceFactory {
     public Die makeDie(int sides);
 }

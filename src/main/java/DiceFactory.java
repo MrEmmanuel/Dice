@@ -1,6 +1,6 @@
 
 
-public class DiceFactory implements SuperClass{
+public class DiceFactory implements SuperDiceFactory{
 
     @Override
     public Die makeDie(int sides) {
